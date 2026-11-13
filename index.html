@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>À mon rythme · Carnet de mouvement</title>
+<style>
+:root{--ink:#132944;--muted:#435a77;--brand:#174ead;--navy:#102a57;--paper:#eff5ff;--line:#c1d1ea;--white:#fff;--soft:#e5efff;--alert:#812d29;--warm:#fff0ea}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:1rem/1.55 system-ui,-apple-system,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+button,a,input,select,textarea,summary{-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:3px solid #165ec6;outline-offset:3px}
+button{min-height:44px;border:1px solid var(--brand);border-radius:11px;background:var(--white);padding:.52rem .85rem;font-weight:690;cursor:pointer}
+button:hover{background:var(--soft)}
+a{color:#154894;text-underline-offset:3px}
+p{margin:.35rem 0 .75rem}
+h1,h2,h3{line-height:1.12;margin:0 0 .6rem}
+h1,h2{font-family:Avenir Next,system-ui,sans-serif;font-weight:730;letter-spacing:-.045em;text-wrap:balance}
+h1{font-size:clamp(3rem,8vw,5.1rem)}
+h2{font-size:clamp(1.7rem,4vw,2.25rem)}
+h3{font-size:1.06rem}
+header{background:var(--navy);color:#f5f9ff;overflow:hidden}
+.wrap{width:min(1060px,calc(100% - 2rem));margin:auto}
+.hero{padding:2.7rem 0 2.25rem;position:relative;isolation:isolate}
+.hero p{max-width:32rem}
+.eyebrow{font-size:.78rem;letter-spacing:.13em;text-transform:uppercase;font-weight:760;color:var(--brand);margin:0 0 .62rem}
+.hero .eyebrow{color:#bfd8ff}
+.hero-art{position:absolute;inset:auto -1rem -5rem auto;width:min(50%,450px);height:auto;z-index:-1;opacity:.34;pointer-events:none}
+main{padding:1.1rem 0 2rem}
+.skip-link{position:absolute;z-index:2;left:1rem;top:.7rem;transform:translateY(-160%);background:var(--white);padding:.55rem .8rem;border-radius:8px}
+.skip-link:focus{transform:translateY(0)}
+.quick-guide{margin:0 0 1rem}
+.quick-guide ol{margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));list-style:none;gap:1px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--line)}
+.quick-guide a{display:grid;grid-template-columns:auto 1fr;align-items:start;gap:.65rem;min-height:100%;padding:.85rem .95rem;background:var(--white);color:var(--ink);text-decoration:none}
+.quick-guide a:hover{background:var(--soft)}
+.quick-guide a:focus-visible{outline-offset:-4px}
+.quick-guide strong{display:block;color:var(--brand);text-decoration:underline;text-underline-offset:3px}
+.quick-guide small{display:block;margin-top:.15rem}
+.step-number{width:1.7rem;aspect-ratio:1;display:grid;place-items:center;border-radius:50%;background:var(--soft);color:var(--brand);font-weight:760}
+#dayTitle,#movementCards,#recovery{scroll-margin-top:1rem}
+.safety,.panel,.week{background:var(--white);border:1px solid var(--line);border-radius:19px}
+.safety{padding:.8rem 1.05rem;background:var(--warm);border-color:#ebcabb;color:var(--alert);margin-bottom:1rem}
+.safety p:last-child{margin-bottom:0}
+.safety a{color:inherit}
+.layout{display:grid;grid-template-columns:minmax(0,1.46fr) minmax(0,1fr);gap:1rem;align-items:start}
+.panel,.week{padding:clamp(.95rem,3vw,1.55rem)}
+.side{display:grid;gap:1rem}
+.hint,.quiet,small{color:var(--muted)}
+.hint{font-size:.91rem}
+.dayhead,.section-head,.actions{display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap}
+.dayhead{margin-bottom:1rem}
+.dayhead h2,.section-head h2{margin-bottom:0}
+.datepicker{display:flex;align-items:end;gap:.4rem;flex-wrap:wrap}
+label{font-weight:660;display:block}
+input:not([type=radio],[type=checkbox]),select,textarea{width:100%;min-width:0;min-height:44px;border:1px solid #7892b7;border-radius:9px;padding:.52rem .62rem;background:#fff}
+input[type=date]{width:auto;max-width:100%}
+input[type=radio],input[type=checkbox]{accent-color:var(--brand);height:1.18rem;width:1.18rem;margin:.12rem .35rem 0 0;flex-shrink:0}
+fieldset{padding:0;margin:1rem 0;border:0;min-width:0}
+legend{padding:0;margin-bottom:.48rem;font-weight:780}
+.choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.4rem}
+.choice{display:flex;align-items:center;min-height:48px;padding:.4rem .46rem;border:1px solid var(--line);border-radius:10px;font-size:.92rem}
+.choice:has(input:checked){background:var(--soft);border-color:var(--brand)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem}
+.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.field{margin-top:.7rem}
+textarea{resize:vertical;min-height:76px}
+.advice{background:var(--soft);border:1px solid var(--line);border-radius:13px;padding:.85rem 1rem;margin:.8rem 0}
+.advice[data-tone=stop]{background:var(--warm);color:var(--alert);border-color:#ebcabb}
+.advice p{margin:0}
+.confirmation{display:flex;align-items:flex-start;gap:.25rem;font-size:.93rem;margin:.55rem 0}
+.reaction{margin-top:1rem;padding-top:.8rem;border-top:1px solid var(--line)}
+summary{min-height:44px;display:list-item;align-content:center;cursor:pointer;font-weight:720}
+details{margin-top:.6rem}
+.actions{justify-content:flex-start;margin-top:1rem}
+.primary{background:var(--brand);color:#fff}
+.primary:hover{background:var(--navy)}
+.text-btn{border-color:var(--line)}
+.status{min-height:1.6em;margin:.55rem 0 0;font-weight:670}
+.status[data-error=true]{color:var(--alert)}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.55rem;margin-top:.7rem}
+.kpi{background:var(--soft);border-radius:10px;padding:.55rem .6rem;font-size:.82rem}
+.kpi strong{display:block;font-size:1.35rem;font-variant-numeric:tabular-nums}
+.spark{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.24rem;margin-top:.9rem}
+.spark button{min-width:0;border-color:var(--line);padding:.3rem .08rem .28rem;display:grid;justify-items:center;gap:.15rem;font-size:.75rem}
+.spark button[aria-current=date]{border:2px solid var(--brand);background:var(--soft)}
+.track{height:38px;width:13px;background:#dae7f9;border-radius:5px;display:flex;align-items:end;overflow:hidden}
+.bar{width:100%;background:#2366c7;border-radius:5px}
+.activity-log{padding:0;list-style:none;margin:.6rem 0 0}
+.activity-log li+li{border-top:1px solid var(--line)}
+.activity-log button{border:0;border-radius:7px;text-align:left;width:100%;padding:.55rem .2rem;display:block;background:transparent;font-weight:650}
+.activity-log button:hover{background:var(--soft)}
+.activity-log small{display:block;font-weight:450}
+.guide ol,.guide ul{padding-left:1.25rem}
+.guide li{margin:.45rem 0}
+.movement-library{padding:.25rem .8rem .7rem;border:1px solid var(--line);border-radius:13px;background:var(--soft)}
+.movement-library>summary{color:var(--brand);font-size:1.1rem}
+.movement-group{padding:.08rem .65rem .35rem;border:1px solid var(--line);border-radius:10px;background:#f3f7ff}
+.movement-group>summary{color:var(--brand)}
+.movement-group>summary small{margin-left:.35rem;font-weight:530}
+.exercise{padding:.1rem .65rem .22rem;border:1px solid var(--line);border-radius:10px;background:var(--white)}
+.exercise:has(input:checked){border-color:var(--brand)}
+.exercise summary small{display:block;font-weight:500}
+.exercise ol{margin:.5rem 0;padding-left:1.4rem}
+.exercise li{margin:.28rem 0;padding-left:.13rem}
+.exercise p{margin:.3rem 0}
+.exercise label{min-height:44px;align-items:center}
+.movement-figure{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin:.65rem 0}
+.movement-figure div{padding:.4rem .45rem;border-radius:8px;background:var(--soft);text-align:center;font-size:.83rem;font-weight:650}
+.movement-figure svg{display:block;width:100%;height:74px;stroke:var(--brand);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;fill:none}
+.movement-figure .support{stroke:#718eb6;stroke-width:2}
+#movementAdvice{background:var(--white);border-left:3px solid var(--brand);padding:.6rem .75rem}
+#movementAdvice[data-tone=stop]{color:var(--alert);font-weight:700}
+.progression{margin:.75rem 0;padding:.6rem .75rem;border-left:3px solid var(--brand);background:var(--white)}
+footer{margin-top:1rem}
+[hidden]{display:none!important}
+@media(max-width:780px){.layout{grid-template-columns:1fr}.hero{padding:1.75rem 0 1.35rem}}
+@media(max-width:580px){.quick-guide ol{grid-template-columns:1fr}.quick-guide a{padding:.6rem .8rem}}
+@media(max-width:410px){.wrap{width:calc(100% - 1rem)}.choices,.grid.three{grid-template-columns:1fr}.hero-art{opacity:.22}.spark{gap:.12rem}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Aller au carnet</a>
+<header>
+  <div class="wrap hero">
+    <svg class="hero-art" viewBox="0 0 400 210" fill="none" aria-hidden="true">
+      <path d="M0 161C65 162 103 25 170 26c65 0 90 103 149 103 33 0 56-31 81-60M0 185C65 186 108 54 170 55c61 0 92 103 149 103 33 0 56-29 81-61M0 209C65 210 114 82 170 83c58 0 96 103 149 103 33 0 56-29 81-61" stroke="#a6c8ff" stroke-width="2"/>
+      <circle cx="309" cy="50" r="30" stroke="#a6c8ff" stroke-width="2"/>
+    </svg>
+    <p class="eyebrow">Carnet de mouvement</p>
+    <h1>À mon rythme</h1>
+    <p>Un repère chaque jour pour noter ce que tu as fait et voir comment tu récupères.</p>
+  </div>
+</header>
+<main class="wrap" id="main">
+  <aside class="safety" aria-label="Sécurité">
+    <p><strong>Somnolence marquée ou jambe qui lâche&nbsp;?</strong> Mets la séance en pause. Fais évaluer ces épisodes avant de poursuivre le tapis ou le bloc.</p>
+    <p>Faiblesse soudaine d’une jambe, douleur thoracique oppressante ou difficulté importante à respirer&nbsp;: appelle le <a href="tel:15">15</a> ou le <a href="tel:112">112</a>.</p>
+  </aside>
+  <nav class="quick-guide" aria-label="Les trois étapes du carnet">
+    <ol>
+      <li><a href="#dayTitle"><span class="step-number" aria-hidden="true">1</span><span><strong>Évalue ta journée</strong><small>Douleur, vigilance et stabilité des jambes.</small></span></a></li>
+      <li><a href="#movementCards" id="openMovements"><span class="step-number" aria-hidden="true">2</span><span><strong>Choisis un mouvement</strong><small>Regarde les étapes et la variante douce.</small></span></a></li>
+      <li><a href="#recovery"><span class="step-number" aria-hidden="true">3</span><span><strong>Note ta récupération</strong><small>Regarde comment tu te sens le lendemain.</small></span></a></li>
+    </ol>
+  </nav>
+  <noscript><p>Active JavaScript dans ton navigateur pour utiliser le carnet.</p></noscript>
+  <div class="layout">
+    <section class="panel" aria-labelledby="dayTitle">
+      <div class="dayhead">
+        <div><p class="eyebrow">Le journal</p><h2 id="dayTitle">Ma journée</h2></div>
+        <div class="datepicker"><div><label for="day">Date</label><input type="date" id="day" min="2000-01-01" required></div><button class="text-btn" type="button" id="today">Aujourd’hui</button></div>
+      </div>
+      <form id="entry" autocomplete="off">
+        <fieldset>
+          <legend>Comment tu te sens avant la séance&nbsp;?</legend>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="state" value="stable">État habituel</label>
+            <label class="choice"><input type="radio" name="state" value="fragile">Journée difficile</label>
+            <label class="choice"><input type="radio" name="state" value="pause">Repos / symptômes</label>
+          </div>
+        </fieldset>
+        <label class="confirmation"><input id="cleared" type="checkbox">Mon soignant a validé le pédalier assis pour moi.</label>
+        <div class="advice" id="advice" aria-live="polite">
+          <h3 id="adviceTitle">Choisis ton état du jour</h3>
+          <p id="adviceText">Ton suivi s’adapte à ton ressenti.</p>
+        </div>
+        <fieldset>
+          <legend>Ce que tu as fait</legend>
+          <p class="hint">Tu peux noter les minutes, cocher les mouvements réalisés ou faire les deux. Pour le repos, indique ton état du jour.</p>
+          <div class="grid three">
+            <div><label for="bike">Pédalier (min)</label><input id="bike" type="number" inputmode="numeric" min="0" max="300" step="1" placeholder="0"></div>
+            <div><label for="walk">Marche (min)</label><input id="walk" type="number" inputmode="numeric" min="0" max="300" step="1" placeholder="0"></div>
+            <div><label for="climb">Bloc (min)</label><input id="climb" type="number" inputmode="numeric" min="0" max="300" step="1" placeholder="0"></div>
+            <div><label for="stretch">Étirements (min)</label><input id="stretch" type="number" inputmode="numeric" min="0" max="300" step="1" placeholder="0"></div>
+            <div><label for="strength">Renforcement (min)</label><input id="strength" type="number" inputmode="numeric" min="0" max="300" step="1" placeholder="0"></div>
+          </div>
+          <details class="movement-library" id="movementCards">
+            <summary>Bibliothèque d’exercices · 18 fiches</summary>
+            <p class="hint">Chaque fiche te montre le mouvement en deux étapes, avec une variante plus facile. Fais valider les mouvements avec ton médecin ou ton kiné avant de les essayer. Arrête si une douleur inhabituelle, un vertige ou une faiblesse apparaît.</p>
+            <p class="hint">Pour les abdos et le gainage, même assis, demande un avis qui tient compte de tes antécédents de chirurgie.</p>
+            <p class="hint" id="movementAdvice" aria-live="polite"></p>
+            <div class="progression">
+              <h3>Comment passer à une autre variante</h3>
+              <p class="hint">L’idée empruntée à la méthode Lafay est de faire évoluer le même mouvement. Par exemple, travaille les mollets assis, puis demande si la variante debout avec appui te convient. Après plusieurs séances dont tu récupères bien le lendemain, change une chose à la fois, comme l’amplitude ou le nombre de répétitions.</p>
+            </div>
+            <label for="movementFilter">Filtrer par type de mouvement</label>
+            <select id="movementFilter">
+              <option value="">Tous les exercices</option>
+              <option value="core">Abdos et gainage</option>
+              <option value="legs">Jambes et fessiers</option>
+              <option value="upper">Haut du corps</option>
+              <option value="mobility">Étirements et mobilité</option>
+            </select>
+            <p class="hint" id="movementCount" role="status">18 fiches affichées.</p>
+          <details class="movement-group" id="movementSeated" open>
+            <summary>Assis sur une chaise <small>Point de départ</small></summary>
+            <p class="hint">Utilise une chaise stable, avec dossier, sans roulettes. Tes pieds peuvent se poser à plat.</p>
+            <details class="exercise" data-family="mobility">
+              <summary><span class="exercise-name">Inclinaison douce du cou</span><small>Souplesse · côté du cou</small></summary>
+              <ol><li>Assieds-toi, regarde devant toi et relâche les épaules.</li><li>Approche légèrement une oreille de l’épaule du même côté, puis reviens au milieu.</li></ol>
+              <p class="hint"><strong>Variante douce.</strong> Garde les mains sur les cuisses. Arrête si tu as un vertige ou si la douleur descend dans le bras.</p>
+              <label class="confirmation"><input type="checkbox" name="movement" value="neck">Noter · Inclinaison douce du cou</label>
+            </details>
+            <details class="exercise" data-family="mobility">
+              <summary><span class="exercise-name">Étirement de l’arrière de la cuisse</span><small>Souplesse · une jambe à la fois</small></summary>
+              <ol><li>Avance un talon au sol, le genou encore un peu plié.</li><li>Incline très légèrement le buste vers l’avant, dos droit. Dès que tu sens une tension douce, redresse-toi lentement.</li></ol>
+              <p class="hint"><strong>Variante douce.</strong> Avance moins le talon. Arrête si la hanche, l’aine ou le dos deviennent douloureux, ou si la jambe fourmille.</p>
+              <label class="confirmation"><input type="checkbox" name="movement" value="hamstring">Noter · Étirement de l’arrière de la cuisse</label>
+            </details>
+            <details class="exercise" data-family="legs">
+              <summary><span class="exercise-name">Lever les talons</span><small>Renforcement · mollets</small></summary>
+              <ol><li>Assieds-toi, les pieds à plat.</li><li>Garde l’avant des pieds au sol, décolle doucement les talons puis repose-les lentement.</li></ol>
+              <p class="hint"><strong>Variante douce.</strong> Décolle les talons de quelques millimètres, le dos soutenu par la chaise.</p>
+              <label class="confirmation"><input type="checkbox" name="movement" value="heels">Noter · Lever les talons</label>
+            </details>
+            <details class="exercise" data-family="legs">
+              <summary><span class="exercise-name">Tendre le genou</span><small>Renforcement · devant de la cuisse</small></summary>
+              <ol><li>Garde un pied au sol et décolle l’autre légèrement.</li><li>Tends un peu le genou, puis repose le pied lentement. Change de côté si le premier est confortable.</li></ol>
+              <p class="hint"><strong>Variante douce.</strong> Garde le genou partiellement plié. Arrête si la jambe manque de contrôle ou si le genou ou la hanche deviennent douloureux.</p>
+              <label class="confirmation"><input type="checkbox" name="movement" value="knee">Noter · Tendre le genou</label>
+            </details>
+            <details class="exercise" data-family="core">
+              <summary><span class="exercise-name">Abdos assis en soufflant</span><small>Abdos · contraction légère</small></summary>
+              <ol><li>Assieds-toi, le dos soutenu et les deux pieds au sol. Inspire tranquillement.</li><li>En soufflant, contracte légèrement le bas du ventre, puis relâche avant l’inspiration suivante.</li></ol>
+              <p class="hint"><strong>Variante douce.</strong> Garde le buste immobile. Une petite contraction sur une expiration suffit, sans pousser vers le bas ni bloquer ta respiration.</p>
+              <label class="confirmation"><input type="checkbox" name="movement" value="seated-core">Noter · Abdos assis en soufflant</label>
+            </details>
+            <details class="exercise" data-family="mobility">
+              <summary><span class="exercise-name">Lever les pointes de pieds</span><small>Mobilité · chevilles</small></summary>
+              <ol><li>Assieds-toi avec les deux talons au sol.</li><li>Ramène les pointes des pieds vers toi, puis repose-les lentement.</li></ol>
+              <p class="hint"><strong>Variante douce.</strong> Essaie un pied à la fois, avec un mouvement très court.</p>
+              <label class="confirmation"><input type="checkbox" name="movement" value="ankle-toes">Noter · Lever les pointes de pieds</label>
+            </details>
+            <details class="exercise" data-family="upper">
+              <summary><span class="exercise-name">Rapprocher les omoplates</span><small>Haut du corps · haut du dos</small></summary>
+              <ol><li>Assieds-toi, bras le long du corps et épaules relâchées.</li><li>Rapproche légèrement les omoplates, puis relâche. Garde les côtes au repos.</li></ol>
+              <p class="hint"><strong>Variante douce.</strong> Fais un mouvement discret, sans bomber le torse. Arrête s’il déclenche une gêne au sternum.</p>
+              <label class="confirmation"><input type="checkbox" name="movement" value="shoulder-blades">Noter · Rapprocher les omoplates</label>
+            </details>
+            <details class="exercise" data-family="legs">
+              <summary><span class="exercise-name">Contracter les fessiers</span><small>Renforcement · fessiers</small></summary>
+              <ol><li>Assieds-toi, les pieds à plat et le bassin posé sur la chaise.</li><li>Contracte légèrement les fessiers, puis relâche en continuant de respirer.</li></ol>
+              <p class="hint"><strong>Variante douce.</strong> Le bassin reste posé. Réduis l’effort si tu sens une pression vers le bas ou une gêne pelvienne.</p>
+              <label class="confirmation"><input type="checkbox" name="movement" value="glute-squeeze">Noter · Contracter les fessiers</label>
+            </details>
+          </details>
+          <details class="movement-group" id="movementSupported">
+            <summary>Debout avec appui <small>À valider avant de pratiquer</small></summary>
+            <p class="hint">Attends que ton médecin ou ton kiné ait évalué les épisodes où tes jambes lâchent et validé ces appuis. Écarte ce groupe les jours où les jambes sont instables ou la vigilance baisse.</p>
+            <details class="exercise" data-family="upper">
+              <summary><span class="exercise-name">Pompe au mur</span><small>Calisthénie · bras et poussée</small></summary>
+              <div class="movement-figure"><div><svg viewBox="0 0 100 72" aria-hidden="true" focusable="false"><path class="support" d="M82 9v56M13 65h69"/><circle cx="61" cy="16" r="6"/><path d="m57 24-7 19-10 20h-9m26-39 13 9 12 2"/></svg>Départ près du mur</div><div><svg viewBox="0 0 100 72" aria-hidden="true" focusable="false"><path class="support" d="M82 9v56M13 65h69"/><circle cx="67" cy="16" r="6"/><path d="m64 24-11 19-13 20h-9m33-39 4 12 14-1"/></svg>Coudes légèrement pliés</div></div>
+              <ol><li>Place-toi près d’un mur, les mains à hauteur des épaules et les pieds bien au sol.</li><li>Plie un peu les coudes pour te rapprocher du mur, puis repousse doucement en soufflant.</li></ol>
+              <p class="hint"><strong>Variante douce.</strong> Garde les pieds près du mur et plie à peine les coudes. Si le sternum ou les poignets deviennent douloureux, arrête.</p>
+              <label class="confirmation"><input type="checkbox" name="movement" value="wall-push">Noter · Pompe au mur</label>
+            </details>
+            <details class="exercise" data-family="legs">
+              <summary><span class="exercise-name">Se lever de la chaise</span><small>Calisthénie · cuisses et fessiers</small></summary>
+              <div class="movement-figure"><div><svg viewBox="0 0 100 72" aria-hidden="true" focusable="false"><path class="support" d="M21 25v27h27m-25-2v15m23-15v15M12 65h78"/><circle cx="40" cy="21" r="6"/><path d="m40 29-3 19 21 1 4 14h10m-32-32 6 12 8 1"/></svg>Assis, pieds au sol</div><div><svg viewBox="0 0 100 72" aria-hidden="true" focusable="false"><path class="support" d="M21 25v27h27m-25-2v15m23-15v15M12 65h78"/><circle cx="61" cy="13" r="6"/><path d="m61 22 1 20-1 21h11m-11-38-6 13-4 5"/></svg>Debout, puis retour assis</div></div>
+              <ol><li>Choisis une chaise haute et stable, avec dossier et accoudoirs si possible. Pose les pieds à plat.</li><li>Penche légèrement le buste, lève-toi en t’aidant des accoudoirs, puis rassieds-toi lentement.</li></ol>
+              <p class="hint"><strong>Variante douce.</strong> Avec l’accord de ton kiné, commence par transférer un peu de poids dans les pieds en restant assis.</p>
+              <label class="confirmation"><input type="checkbox" name="movement" value="chair-stand">Noter · Se lever de la chaise</label>
+            </details>
+            <details class="exercise" data-family="legs">
+              <summary><span class="exercise-name">Mini-squat avec appui</span><small>Calisthénie · cuisses et fessiers</small></summary>
+              <ol><li>Pose les deux mains sur un plan de travail fixe, avec les pieds à largeur des hanches.</li><li>Plie très légèrement les genoux, garde les talons au sol, puis redresse-toi lentement.</li></ol>
+              <p class="hint"><strong>Variante douce.</strong> Limite la descente à quelques centimètres. Si la hanche ou le genou gêne, reviens à une variante assise validée.</p>
+              <label class="confirmation"><input type="checkbox" name="movement" value="supported-squat">Noter · Mini-squat avec appui</label>
+            </details>
+            <details class="exercise" data-family="legs">
+              <summary><span class="exercise-name">Lever les talons debout</span><small>Renforcement · mollets</small></summary>
+              <ol><li>Debout face à un plan fixe, pose les deux mains sur l’appui.</li><li>Monte légèrement sur les pointes des deux pieds, puis redescends avec contrôle.</li></ol>
+              <p class="hint"><strong>Variante douce.</strong> La version assise du carnet travaille aussi les mollets avec moins de charge.</p>
+              <label class="confirmation"><input type="checkbox" name="movement" value="standing-heels">Noter · Lever les talons debout</label>
+            </details>
+            <details class="exercise" data-family="legs">
+              <summary><span class="exercise-name">Écarter la jambe avec appui</span><small>Renforcement · côté de la hanche</small></summary>
+              <ol><li>Tiens un plan de travail fixe avec les deux mains.</li><li>Écarte légèrement un pied sur le côté, les orteils vers l’avant. Ramène-le lentement, sans incliner le buste.</li></ol>
+              <p class="hint"><strong>Variante douce.</strong> Garde la pointe du pied en contact avec le sol. Arrête si la hanche devient douloureuse ou si l’appui sur l’autre jambe est instable.</p>
+              <label class="confirmation"><input type="checkbox" name="movement" value="hip-side">Noter · Écarter la jambe avec appui</label>
+            </details>
+            <details class="exercise" data-family="core">
+              <summary><span class="exercise-name">Gainage debout au mur</span><small>Abdos et gainage · appui mural</small></summary>
+              <ol><li>Place les mains au mur à hauteur des épaules, les pieds proches du mur.</li><li>Incline-toi très légèrement, garde le corps aligné et respire normalement. Reviens debout dès que l’effort monte.</li></ol>
+              <p class="hint"><strong>Variante douce.</strong> Reste presque vertical et garde l’appui le temps d’une respiration confortable. L’abdo assis est une autre option à valider.</p>
+              <label class="confirmation"><input type="checkbox" name="movement" value="wall-plank">Noter · Gainage debout au mur</label>
+            </details>
+          </details>
+          <details class="movement-group" id="movementFloor">
+            <summary>Au sol <small>À valider avant de pratiquer</small></summary>
+            <p class="hint">Vu tes antécédents de chirurgie, fais valider les abdos et le gainage avec ton médecin ou ton kiné, ainsi que la façon de descendre au sol et de te relever. Garde une respiration libre pendant l’effort.</p>
+            <details class="exercise" data-family="core">
+              <summary><span class="exercise-name">Petite bascule du bassin</span><small>Abdos et gainage · sur le dos</small></summary>
+              <ol><li>Allonge-toi sur le dos, genoux pliés et pieds posés.</li><li>En soufflant, bascule un peu le bassin pour rapprocher le bas du dos du support, puis relâche.</li></ol>
+              <p class="hint"><strong>Variante douce.</strong> Fais une bascule minime et garde les fessiers posés.</p>
+              <label class="confirmation"><input type="checkbox" name="movement" value="pelvic-tilt">Noter · Petite bascule du bassin</label>
+            </details>
+            <details class="exercise" data-family="core">
+              <summary><span class="exercise-name">Glisser un talon</span><small>Abdos et gainage · préparation au dead bug</small></summary>
+              <ol><li>Sur le dos, plie les genoux et pose les deux pieds. Garde le bassin tranquille.</li><li>En soufflant, fais glisser un talon vers l’avant sans le décoller. Ramène-le doucement et change de côté si c’est confortable.</li></ol>
+              <p class="hint"><strong>Variante douce.</strong> Fais glisser le talon de quelques centimètres. Arrête si le dos ou la hanche devient douloureux.</p>
+              <label class="confirmation"><input type="checkbox" name="movement" value="heel-slide">Noter · Glisser un talon</label>
+            </details>
+            <details class="exercise" data-family="legs">
+              <summary><span class="exercise-name">Petit pont fessier</span><small>Calisthénie · fessiers</small></summary>
+              <div class="movement-figure"><div><svg viewBox="0 0 100 72" aria-hidden="true" focusable="false"><path class="support" d="M7 58h85"/><circle cx="17" cy="48" r="6"/><path d="m26 55 29 0 15-19 11 19h9m-63 0 17 0"/></svg>Bassin au sol</div><div><svg viewBox="0 0 100 72" aria-hidden="true" focusable="false"><path class="support" d="M7 58h85"/><circle cx="17" cy="48" r="6"/><path d="m26 54 28-8 15-14 12 23h9m-63 0 17 0"/></svg>Bassin légèrement levé</div></div>
+              <ol><li>Sur le dos, pose les pieds au sol, genoux pliés. Garde les bras relâchés.</li><li>En soufflant, pousse doucement dans les pieds et décolle un peu le bassin, puis repose-le lentement.</li></ol>
+              <p class="hint"><strong>Variante douce.</strong> Quelques centimètres suffisent. Si le mouvement déclenche une gêne pelvienne ou à la hanche, laisse-le de côté.</p>
+              <label class="confirmation"><input type="checkbox" name="movement" value="mini-bridge">Noter · Petit pont fessier</label>
+            </details>
+            <details class="exercise" data-family="core">
+              <summary><span class="exercise-name">Glisser une main à quatre pattes</span><small>Abdos et gainage · préparation au bird dog</small></summary>
+              <ol><li>Place les mains sous les épaules et les genoux sous les hanches, sur un tapis stable.</li><li>Fais glisser les doigts d’une main un peu vers l’avant en gardant le bassin immobile, puis ramène la main.</li></ol>
+              <p class="hint"><strong>Variante douce.</strong> Garde les doigts au sol. Arrête si les poignets, les genoux ou le thorax deviennent douloureux.</p>
+              <label class="confirmation"><input type="checkbox" name="movement" value="bird-dog-prep">Noter · Glisser une main à quatre pattes</label>
+            </details>
+          </details>
+          </details>
+        </fieldset>
+        <div class="reaction" id="recovery">
+          <label for="reaction">Réaction à la séance d’hier</label>
+          <select id="reaction">
+            <option value="">Non renseignée</option>
+            <option value="same">Comme d’habitude ou mieux</option>
+            <option value="worse">Douleur ou fatigue plus forte</option>
+            <option value="none">Repos hier</option>
+          </select>
+          <p class="hint">Le lendemain, regarde aussi si tes activités habituelles sont devenues plus difficiles.</p>
+        </div>
+        <details id="extra">
+          <summary>Ajouter douleur, fatigue, poids ou une note</summary>
+          <p class="hint" id="scales">Douleur et fatigue sur 10, de 0 (aucune) à 10 (maximale). Champs facultatifs.</p>
+          <div class="grid">
+            <div><label for="pain">Douleur (/10)</label><input id="pain" type="number" inputmode="numeric" min="0" max="10" step="1" aria-describedby="scales"></div>
+            <div><label for="fatigue">Fatigue (/10)</label><input id="fatigue" type="number" inputmode="numeric" min="0" max="10" step="1" aria-describedby="scales"></div>
+          </div>
+          <div class="field"><label for="weight">Poids (kg)</label><input id="weight" type="text" inputmode="decimal" maxlength="6" pattern="[0-9]{1,3}([,.][0-9]{1,2})?" title="Par exemple 83,5"></div>
+          <div class="field"><label for="note">Note libre</label><textarea id="note" maxlength="300" placeholder="Ex. J’ai récupéré normalement après le pédalier."></textarea></div>
+        </details>
+        <div class="actions">
+          <button type="submit" class="primary">Enregistrer la journée</button>
+          <button type="button" class="text-btn" id="remove" hidden>Supprimer cette journée</button>
+        </div>
+        <p id="status" class="status" role="status"></p>
+      </form>
+    </section>
+    <div class="side">
+      <section class="week" aria-labelledby="weekTitle">
+        <div class="section-head"><div><p class="eyebrow">Vue d’ensemble</p><h2 id="weekTitle">Les 7 derniers jours</h2></div></div>
+        <div class="kpis">
+          <div class="kpi"><strong id="total">0</strong> minutes</div>
+          <div class="kpi"><strong id="logged">0</strong> jours notés</div>
+          <div class="kpi"><strong id="lastWeight">—</strong> dernier poids</div>
+        </div>
+        <div class="spark" id="weekDays" aria-label="Ouvrir une journée"></div>
+        <p class="hint" id="weekCaption">Sélectionne un jour pour ouvrir sa fiche.</p>
+        <details id="historyDetails">
+          <summary>Historique des journées</summary>
+          <ul id="history" class="activity-log"></ul>
+        </details>
+      </section>
+      <section class="panel guide" aria-labelledby="guideTitle">
+        <p class="eyebrow">Ta routine</p>
+        <h2 id="guideTitle">Un créneau court</h2>
+        <p>Une fois le pédalier validé, accroche la séance à un moment déjà en place, par exemple après le déjeuner les jours travaillés.</p>
+        <ol>
+          <li><strong>Commence par 5 à 8 min faciles</strong> sur 3 jours la première semaine, si ton soignant valide ce repère. Tu dois pouvoir parler facilement.</li>
+          <li><strong>Observe jusqu’au lendemain.</strong> Si la douleur ou la fatigue augmente et gêne ton quotidien, raccourcis la prochaine séance ou prends du repos.</li>
+          <li><strong>Garde la même durée plusieurs séances.</strong> Si tu récupères comme d’habitude, ajoute 1 à 2 minutes à une séance. Un seul changement à la fois.</li>
+        </ol>
+        <p class="hint">Ces durées sont des repères de départ. Si ton soignant fixe une durée plus courte, garde celle-ci. Tapis et bloc demandent une validation distincte.</p>
+        <details>
+          <summary>Sources et repères</summary>
+          <ul>
+            <li><a href="https://www.has-sante.fr/jcms/p_3635254/fr/fibromyalgie-prescription-et-mise-en-oeuvre-de-l-activite-physique-adaptee">HAS · Activité physique adaptée et fibromyalgie</a></li>
+            <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6481524/">Cochrane · Exercice aérobie et fibromyalgie</a></li>
+            <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11672165/">JAMA Network Open · Activité aérobie et poids</a></li>
+            <li><a href="https://www.has-sante.fr/jcms/p_3408871/fr/guide-du-parcours-de-soinssurpoids-et-obesite-de-l-adulte">HAS · Parcours de soins du surpoids</a></li>
+            <li><a href="https://www.nhs.uk/live-well/exercise/flexibility-exercises/">NHS · Étirement du cou</a> et <a href="https://www.esht.nhs.uk/wp-content/uploads/2026/04/My-keep-active-handbook.pdf">NHS · Étirement de l’arrière de la cuisse</a></li>
+            <li><a href="https://www.uhsussex.nhs.uk/resources/chair-exercises/">NHS · Renforcement assis des mollets et des cuisses</a></li>
+            <li><a href="https://ed-amphora.fr/produit/musculation-preparation-physique/methode-lafay/methode-de-musculation/">Éditions Amphora · Méthode Lafay</a></li>
+            <li><a href="https://www.nhs.uk/live-well/exercise/strength-exercises/">NHS · Poussée au mur et exercices avec appui</a></li>
+            <li><a href="https://www.cuh.nhs.uk/patient-information/advice-following-abdominal-surgery/">NHS · Abdominaux après chirurgie</a> et <a href="https://www.csp.org.uk/conditions/back-pain/video-exercises-back-pain">Chartered Society of Physiotherapy · Glissement du talon</a></li>
+            <li><a href="https://www.ruh.nhs.uk/patients/services/physiotherapy/documents/PHY042_Progressive_Abdominal_Strengthening.pdf">NHS · Variantes de gainage au mur et à quatre pattes</a></li>
+            <li><a href="https://github.com/rfivesix/OpenExerciseDB">OpenExerciseDB · Catalogue général proposé</a></li>
+          </ul>
+        </details>
+      </section>
+    </div>
+  </div>
+  <footer class="panel">
+    <details>
+      <summary>Sauvegarder ou restaurer mon carnet</summary>
+      <p class="hint">Le carnet fonctionne hors ligne. Les données restent dans ce navigateur, sur cet appareil. Garde une sauvegarde avant de changer de navigateur, de déplacer ce fichier ou d’effacer les données de navigation. La sauvegarde contient les informations que tu as saisies.</p>
+      <div class="actions">
+        <button type="button" id="export">Exporter une sauvegarde</button>
+        <button type="button" id="import">Importer une sauvegarde</button>
+        <input type="file" id="backup" accept=".json,application/json" aria-label="Fichier de sauvegarde" hidden>
+      </div>
+      <p class="status" id="backupStatus" role="status"></p>
+    </details>
+  </footer>
+</main>
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+const form = $("entry");
+const key = "a-mon-rythme-v1";
+const activities = {bike:"Pédalier",walk:"Marche",climb:"Bloc",stretch:"Étirements",strength:"Renforcement"};
+const numeric = [...Object.keys(activities),"pain","fatigue"];
+const fields = [...numeric,"reaction","weight","note"];
+const movementInputs = Array.from($("movementCards").querySelectorAll('input[name="movement"]'));
+const movementGroups = Array.from($("movementCards").querySelectorAll(".movement-group"));
+const movementNames = new Map(movementInputs.map(input => [
+  input.value,input.closest("details").querySelector(".exercise-name").textContent
+]));
+const states = {"":"Non renseigné",stable:"État habituel",fragile:"Journée difficile",pause:"Repos / symptômes"};
+const reactions = {"":"",same:"Récupération habituelle ou meilleure",worse:"Douleur ou fatigue plus forte après la veille",none:"Repos la veille"};
+const dateFormat = new Intl.DateTimeFormat("fr-FR",{dateStyle:"full"});
+const shortDay = new Intl.DateTimeFormat("fr-FR",{weekday:"short"});
+const numberFormat = new Intl.NumberFormat("fr-FR",{maximumFractionDigits:2});
+const empty = {version:1,cleared:false,entries:{}};
+let data = empty;
+let selected = "";
+let original = "";
+let storedDataUsable = true;
+function dayKey(date = new Date()) {
+  const pad = number => String(number).padStart(2,"0");
+  return date.getFullYear()+"-"+pad(date.getMonth()+1)+"-"+pad(date.getDate());
+}
+function asDate(key) { return new Date(key+"T12:00:00"); }
+function validDay(value) {
+  return /^\d{4}-\d{2}-\d{2}$/.test(value) && value >= "2000-01-01" &&
+    value <= dayKey() && dayKey(asDate(value)) === value;
+}
+function plain(value) { return value !== null && typeof value === "object" && !Array.isArray(value); }
+function validData(value) {
+  if (!plain(value) || value.version !== 1 || typeof value.cleared !== "boolean" || !plain(value.entries)) return false;
+  return Object.entries(value.entries).every(([day, record]) => {
+    if (!validDay(day) || !plain(record) || typeof record.state !== "string" || !Object.hasOwn(states,record.state) ||
+        typeof record.reaction !== "string" || !Object.hasOwn(reactions,record.reaction) ||
+        typeof record.note !== "string" || record.note.length > 300) return false;
+    if (record.weight !== null && (!Number.isFinite(record.weight) || record.weight < 20 || record.weight > 500)) return false;
+    if (Object.hasOwn(record,"moves") && (!Array.isArray(record.moves) ||
+        new Set(record.moves).size !== record.moves.length || !record.moves.every(id => movementNames.has(id)))) return false;
+    return numeric.every(id => record[id] === null ||
+      (!Object.hasOwn(record,id) && (id === "stretch" || id === "strength")) ||
+      (Number.isInteger(record[id]) && record[id] >= 0 && record[id] <= (id in activities ? 300 : 10)));
+  });
+}
+function readStored() {
+  const raw = localStorage.getItem(key);
+  const parsed = raw === null ? empty : JSON.parse(raw);
+  if (!validData(parsed)) throw new Error("Invalid data");
+  return parsed;
+}
+function say(message, error = false, target = $("status")) {
+  target.textContent = message;
+  target.dataset.error = String(error);
+}
+function commit(change, target = $("status")) {
+  if (!storedDataUsable) {
+    say("Les données existantes sont illisibles. Essaie d’ouvrir le carnet dans un autre navigateur avec une sauvegarde.",true,target);
+    return false;
+  }
+  try {
+    const current = readStored();
+    const next = change(current);
+    if (!next) {
+      say("Cette fiche a changé dans une autre fenêtre. Rouvre la journée avant de réessayer.",true,target);
+      return false;
+    }
+    localStorage.setItem(key,JSON.stringify(next));
+    data = next;
+    return true;
+  } catch {
+    say("Impossible d’écrire dans ce navigateur. Ouvre le fichier dans un navigateur standard, hors navigation privée.",true,target);
+    return false;
+  }
+}
+function currentState() { return form.elements.state.value; }
+function filterMovements() {
+  const family = $("movementFilter").value;
+  let total = 0;
+  for (const group of movementGroups) {
+    let visible = 0;
+    for (const card of group.querySelectorAll(".exercise")) {
+      card.hidden = !!family && card.dataset.family !== family;
+      if (!card.hidden) visible++;
+    }
+    total += visible;
+    group.hidden = visible === 0;
+    group.open = !!family || group.id === "movementSeated" || group.querySelector("input:checked") !== null;
+  }
+  $("movementCount").textContent = total === 1 ? "1 fiche affichée." : total+" fiches affichées.";
+}
+function suggest() {
+  const state = currentState();
+  const fragile = state === "fragile" || $("reaction").value === "worse";
+  const movementAdvice = $("movementAdvice");
+  movementAdvice.dataset.tone = state === "pause" ? "stop" : "";
+  if (state === "pause") {
+    movementAdvice.textContent = "Repos aujourd’hui. En cas de somnolence marquée ou de jambes instables, mets aussi ces mouvements assis en pause.";
+  } else if (fragile) {
+    movementAdvice.textContent = "Journée allégée. Si un mouvement assis déjà validé reste confortable et que tu es bien éveillé et stable, réduis l’amplitude ou la durée. Le repos est aussi une option.";
+  } else if (!state) {
+    movementAdvice.textContent = "Commence par choisir ton état du jour. Tu peux aussi consulter les fiches pour en parler avec ton soignant.";
+  } else {
+    movementAdvice.textContent = "Après validation, essaie un seul mouvement assis dans un créneau habituel. Tu peux commencer par 2 ou 3 répétitions lentes, ou environ 5 secondes pour un étirement. Vérifie comment tu récupères le lendemain.";
+  }
+  let title = "Choisis ton état du jour";
+  let message = "Si tu veux juste garder une trace, tu peux enregistrer ta journée directement.";
+  let tone = "";
+  if (state === "pause") {
+    title = "Repos aujourd’hui";
+    message = "Si tu somnoles ou si tes jambes sont instables, mets la séance en pause, exercices assis compris. Tu peux noter la journée et reprendre seulement quand les conditions sont sûres.";
+    tone = "stop";
+  } else if (state && !$("cleared").checked) {
+    title = "Repère à valider";
+    message = "Attends l’avis de ton soignant pour définir une séance au pédalier. Tu peux déjà utiliser ce carnet pour noter ton état.";
+  } else if (state && fragile) {
+    title = "Journée allégée";
+    message = "Le repos est une option. Si tu es bien éveillé, stable et que les symptômes sont habituels, reste en dessous de ta dernière durée bien tolérée.";
+  } else if (state === "stable") {
+    title = "Pédalier facile · 5 à 8 min au départ";
+    message = "Si tu es bien éveillé et que tes jambes sont stables, prends une résistance basse. Reste à une allure où tu parles facilement et respecte la durée validée avec ton soignant.";
+  }
+  $("advice").dataset.tone = tone;
+  $("adviceTitle").textContent = title;
+  $("adviceText").textContent = message;
+}
+function setDay(day) {
+  selected = day;
+  const record = data.entries[day] || {};
+  original = JSON.stringify(data.entries[day] ?? null);
+  for (const option of form.elements.state) option.checked = option.value === record.state;
+  for (const id of fields) $(id).value = record[id] ?? "";
+  for (const input of movementInputs) {
+    input.checked = (record.moves ?? []).includes(input.value);
+    if (input.checked) {
+      input.closest(".movement-group").open = true;
+      input.closest("details").open = true;
+    }
+  }
+  if (record.moves?.length) $("movementCards").open = true;
+  if (record.weight != null) $("weight").value = numberFormat.format(record.weight);
+  $("extra").open = ["pain","fatigue","weight","note"].some(id => record[id] != null && record[id] !== "");
+  $("day").max = dayKey();
+  $("day").value = day;
+  $("cleared").checked = data.cleared;
+  $("remove").hidden = !data.entries[day];
+  suggest();
+  render();
+}
+function minutes(record) {
+  return Object.keys(activities).reduce((sum,id) => sum + (record?.[id] || 0),0);
+}
+function render() {
+  const days = Array.from({length:7},(_,index) => {
+    const date = new Date();
+    date.setDate(date.getDate() - 6 + index);
+    const key = dayKey(date);
+    return {date,key,total:minutes(data.entries[key])};
+  });
+  $("total").textContent = days.reduce((sum,day) => sum + day.total,0);
+  $("logged").textContent = days.filter(day => data.entries[day.key]).length;
+  const entries = Object.entries(data.entries).sort(([a],[b]) => b.localeCompare(a));
+  const latest = entries.find(([,record]) => record.weight !== null);
+  $("lastWeight").textContent = latest ? numberFormat.format(latest[1].weight)+" kg" : "—";
+  const max = Math.max(1,...days.map(day => day.total));
+  const week = $("weekDays");
+  week.replaceChildren();
+  for (const day of days) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.dataset.day = day.key;
+    button.setAttribute("aria-label",dateFormat.format(day.date)+", "+(data.entries[day.key] ? day.total+" minutes" : "jour non renseigné"));
+    if (day.key === selected) button.setAttribute("aria-current","date");
+    const track = document.createElement("span");
+    track.className = "track";
+    track.setAttribute("aria-hidden","true");
+    const bar = document.createElement("span");
+    bar.className = "bar";
+    bar.style.height = (day.total/max*100)+"%";
+    track.append(bar);
+    button.append(track, shortDay.format(day.date).replace(".",""), data.entries[day.key] ? String(day.total) : "·");
+    week.append(button);
+  }
+  const history = $("history");
+  history.replaceChildren();
+  if (!entries.length) {
+    const item = document.createElement("li");
+    item.textContent = "Ton historique apparaîtra ici.";
+    history.append(item);
+  }
+  for (const [day, record] of entries) {
+    const item = document.createElement("li");
+    const button = document.createElement("button");
+    const details = document.createElement("small");
+    button.type = "button";
+    button.dataset.day = day;
+    button.textContent = dateFormat.format(asDate(day));
+    const names = Object.entries(activities).filter(([id]) => record[id] > 0).map(([id,label]) => label+" "+record[id]+" min");
+    for (const id of record.moves ?? []) names.push(movementNames.get(id));
+    if (record.state) names.push(states[record.state]);
+    if (record.reaction) names.push(reactions[record.reaction]);
+    if (record.pain !== null) names.push("Douleur "+record.pain+"/10");
+    if (record.fatigue !== null) names.push("Fatigue "+record.fatigue+"/10");
+    if (record.weight !== null) names.push(numberFormat.format(record.weight)+" kg");
+    details.textContent = names.join(" · ") || "Journée notée";
+    button.append(details);
+    item.append(button);
+    history.append(item);
+  }
+}
+function readForm() {
+  const record = {state:currentState(),reaction:$("reaction").value,note:$("note").value.trim()};
+  for (const id of numeric) record[id] = $(id).value === "" ? null : $(id).valueAsNumber;
+  const weight = $("weight").value.trim();
+  record.weight = weight === "" ? null : Number(weight.replace(",","."));
+  const moves = movementInputs.filter(input => input.checked).map(input => input.value);
+  if (moves.length) record.moves = moves;
+  return record;
+}
+function go(day) {
+  if (!validDay(day)) { $("day").value = selected; return; }
+  const record = readForm();
+  const saved = data.entries[selected];
+  const isDirty = saved ? ["state",...fields].some(id => (saved[id] ?? null) !== record[id]) ||
+    movementInputs.some(input => input.checked !== (saved.moves ?? []).includes(input.value)) :
+    Object.values(record).some(value => value !== "" && value !== null);
+  if (isDirty && !window.confirm("Quitter cette fiche sans enregistrer la saisie ?")) {
+    $("day").value = selected;
+    return;
+  }
+  try { data = readStored(); } catch { /* Keep the currently displayed copy. */ }
+  setDay(day);
+  say("");
+  $("day").focus();
+}
+$("day").addEventListener("change",event => go(event.target.value));
+$("today").addEventListener("click",() => go(dayKey()));
+$("movementFilter").addEventListener("change",filterMovements);
+$("openMovements").addEventListener("click",() => { $("movementCards").open = true; });
+for (const list of [$("history"),$("weekDays")]) list.addEventListener("click",event => {
+  const button = event.target.closest("button[data-day]");
+  if (button) go(button.dataset.day);
+});
+form.addEventListener("change",suggest);
+$("cleared").addEventListener("change",() => {
+  const desired = $("cleared").checked;
+  if (!commit(current => ({...current,cleared:desired}))) $("cleared").checked = data.cleared;
+  else say(desired ? "Validation du pédalier enregistrée." : "Validation du pédalier retirée.");
+  suggest();
+});
+form.addEventListener("invalid",event => {
+  if ($("extra").contains(event.target)) $("extra").open = true;
+},true);
+form.addEventListener("submit",event => {
+  event.preventDefault();
+  const record = readForm();
+  if (record.weight !== null && (!Number.isFinite(record.weight) || record.weight < 20 || record.weight > 500)) {
+    $("extra").open = true;
+    say("Indique un poids entre 20 et 500 kg, ou laisse ce champ vide.",true);
+    $("weight").focus();
+    return;
+  }
+  if (!Object.values(record).some(value => value !== "" && value !== null)) {
+    say("Renseigne ton état, une activité ou une note pour enregistrer la journée.",true);
+    return;
+  }
+  if (!commit(current => {
+    if (JSON.stringify(current.entries[selected] ?? null) !== original) return null;
+    return {...current,entries:{...current.entries,[selected]:record}};
+  })) return;
+  setDay(selected);
+  say("Journée enregistrée.");
+});
+$("remove").addEventListener("click",() => {
+  if (!window.confirm("Supprimer les informations de cette journée ?")) return;
+  if (!commit(current => {
+    if (JSON.stringify(current.entries[selected] ?? null) !== original) return null;
+    const entries = {...current.entries};
+    delete entries[selected];
+    return {...current,entries};
+  })) return;
+  setDay(selected);
+  $("day").focus();
+  say("Journée supprimée.");
+});
+$("export").addEventListener("click",() => {
+  const target = $("backupStatus");
+  if (!storedDataUsable) { say("Les données existantes sont illisibles.",true,target); return; }
+  try {
+    const url = URL.createObjectURL(new Blob([JSON.stringify(readStored(),null,2)],{type:"application/json"}));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "Carnet_A_Mon_Rythme_"+dayKey()+".json";
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url),3000);
+    say("Sauvegarde générée.",false,target);
+  } catch { say("Impossible de lire les données du navigateur.",true,target); }
+});
+$("import").addEventListener("click",() => $("backup").click());
+$("backup").addEventListener("change",async event => {
+  const file = event.target.files[0];
+  event.target.value = "";
+  if (!file) return;
+  const target = $("backupStatus");
+  try {
+    if (file.size > 5000000) throw new Error("Large file");
+    const imported = JSON.parse(await file.text());
+    if (!validData(imported)) throw new Error("Invalid backup");
+    let added = 0;
+    if (!commit(current => {
+      const entries = {...current.entries};
+      for (const [day,record] of Object.entries(imported.entries)) {
+        if (Object.hasOwn(entries,day)) continue;
+        entries[day] = record;
+        added++;
+      }
+      return {...current,entries};
+    },target)) return;
+    $("cleared").checked = data.cleared;
+    render();
+    suggest();
+    say(added+" journée(s) importée(s). Les fiches déjà présentes ont été conservées. Rouvre une date pour afficher sa fiche.",false,target);
+  } catch { say("Sauvegarde invalide. Choisis un fichier JSON exporté par ce carnet.",true,target); }
+});
+try {
+  data = readStored();
+  localStorage.setItem(key,JSON.stringify(data));
+} catch {
+  try { readStored(); } catch { storedDataUsable = false; }
+  say("Le stockage local est indisponible ou illisible. Vérifie ce message avant de saisir tes données.",true);
+}
+setDay(dayKey());
+if (window.location?.hash === "#movementCards") $("movementCards").open = true;
+</script>
+</body>
+</html>
